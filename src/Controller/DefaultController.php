@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
+use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,26 +15,9 @@ class DefaultController extends AbstractController
     /**
      * @Route("/", name="liste_articles", methods={"GET"})
      */
-    public function listeArticles():Response{
+    public function listeArticles(ArticleRepository $articleRepository):Response{
 
-        $articles = [
-            [
-                'nom' => 'Article 1',
-                'id' => 1
-            ],
-            [
-                'nom' => 'Article 2',
-                'id' => 2
-            ],
-            [
-                'nom' => 'Article 3',
-                'id' => 3
-            ],
-            [
-                'nom' => 'Article 4',
-                'id' => 4
-            ]
-        ];
+        $articles = $articleRepository->findAll();
 
         return $this->render('default/index.html.twig', [
             'articles' => $articles
@@ -43,10 +29,30 @@ class DefaultController extends AbstractController
     /**
      * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET"})
      */
-    public function vueArticle($id){
+    public function vueArticle(Article $article){
+
+
 
         return $this->render('default/vue.html.twig', [
-            'id' => $id
+            'article' => $article
         ]);
+    }
+
+    /**
+     * @Route("/article/ajouter", name="ajout_article")
+     */
+    public function ajouter(EntityManagerInterface $manager){
+
+        $article = new Article();
+        $article->setTitre("Titre de l'article");
+        $article->setContenu("Ceci est le contenu de l'article");
+        $article->setDateCreation(new \DateTime());
+
+        $manager->persist($article);
+
+        $manager->flush();
+
+        die;
+
     }
 }
