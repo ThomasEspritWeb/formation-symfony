@@ -3,9 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\Comment;
+use App\Form\ArticleType;
+use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,32 +31,56 @@ class DefaultController extends AbstractController
 
     // /12 afficher un article
     /**
-     * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET"})
+     * @Route("/{id}", name="vue_article", requirements={"id"="\d+"}, methods={"GET", "POST"})
      */
-    public function vueArticle(Article $article){
+    public function vueArticle(Article $article, Request $request, EntityManagerInterface $manager){
 
+        $comment = new Comment();
+        $comment->setArticle($article);
 
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $manager->persist($comment);
+            $manager->flush();
+
+            return $this->redirectToRoute('vue_article',  ['id' => $article->getId()]);
+
+        }
 
         return $this->render('default/vue.html.twig', [
-            'article' => $article
+            'article' => $article,
+            'form' => $form->createView()
         ]);
     }
 
     /**
      * @Route("/article/ajouter", name="ajout_article")
      */
-    public function ajouter(EntityManagerInterface $manager){
+    public function ajouter(Request $request, EntityManagerInterface $manager){
 
         $article = new Article();
-        $article->setTitre("Titre de l'article");
-        $article->setContenu("Ceci est le contenu de l'article");
-        $article->setDateCreation(new \DateTime());
 
-        $manager->persist($article);
+        $form = $this->createForm(ArticleType::class, $article);
 
-        $manager->flush();
+        $form->handleRequest($request);
 
-        die;
+        if($form->isSubmitted() && $form->isValid()){
+
+            $manager->persist($article);
+            $manager->flush();
+
+            return $this->redirectToRoute('liste_articles');
+
+        }
+
+        return $this->render('default/ajout.html.twig', [
+            'form' => $form->createView()
+        ]);
+
 
     }
 }
