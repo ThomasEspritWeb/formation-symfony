@@ -3,29 +3,47 @@
 {% block title %}Ajouter un article{% endblock %}
 
 {% block body %}
+    <h1>
+        {% if app.request.get('_route') == 'ajout_article' %}
+            Ajouter un article
+        {% else %}
+            Modifier l'article
+        {% endif %}
+    </h1>
     {% if not form.vars.valid %}
-        {{ form_start(form, {'attr':{'class':'was-validated'}}) }}
+        {{ form_start(form, {'attr':{'class':'was-validated mb-5'}}) }}
     {% else %}
-        {{ form_start(form) }}
+        {{ form_start(form, {'attr':{'class':'mb-5'}}) }}
     {% endif %}
-        {{ form_label(form.titre, null, {'label_attr': {'class':'form-label'}} ) }}
-        {{ form_widget(form.titre, {'attr': {'class':'form-control'}}) }}
-        <div class="invalid-feedback">
-            {{ form_errors(form.titre) }}
+
+        <div class="form-group mt-2">
+            {{ form_label(form.titre, null, {'label_attr': {'class':'form-label'}} ) }}
+            {{ form_widget(form.titre, {'attr': {'class':'form-control'}}) }}
+            <div class="invalid-feedback">
+                {{ form_errors(form.titre) }}
+            </div>
         </div>
 
+        <div class="form-group mt-2">
+            {{ form_label(form.contenu, null, {'label_attr': {'class':'form-label'}} ) }}
+            {{ form_widget(form.contenu, {'attr': {'class':'form-control', "rows":"10"}}) }}
+        </div>
 
-        {{ form_label(form.contenu, null, {'label_attr': {'class':'form-label'}} ) }}
-        {{ form_widget(form.contenu, {'attr': {'class':'form-control'}}) }}
+        <div class="form-group mt-2">
+            {{ form_label(form.dateCreation, null, {'label_attr': {'class':'form-label'}} ) }}
+            {{ form_widget(form.dateCreation, {'attr': {'class':'form-control'}}) }}
+        </div>
 
-        {{ form_label(form.dateCreation, null, {'label_attr': {'class':'form-label'}} ) }}
-        {{ form_widget(form.dateCreation, {'attr': {'class':'form-control'}}) }}
+        <div class="form-group mt-2">
+            {{ form_label(form.categories, null, {'label_attr': {'class':'form-label'}} ) }}
+            <small class="form-text text-muted">Ctrl + Click pour séléctionner plusieurs catégories</small>
+            {{ form_widget(form.categories, {'attr': {'class':'form-control'}}) }}
+        </div>
 
-        {{ form_label(form.categories, null, {'label_attr': {'class':'form-label'}} ) }}
-        {{ form_widget(form.categories, {'attr': {'class':'form-control'}}) }}
-
-        {{ form_widget(form.brouillon, { 'attr' : { 'class' : 'btn btn-default' } }) }}
-        {{ form_widget(form.publier, { 'attr' : { 'class' : 'btn btn-success' } }) }}
+        <div class="form-group mt-2">
+            {{ form_widget(form.brouillon, { 'attr' : { 'class' : 'btn btn-default' } }) }}
+            {{ form_widget(form.publier, { 'attr' : { 'class' : 'btn btn-success' } }) }}
+        </div>
 
         {{ form_rest(form) }}
     {{ form_end(form) }}

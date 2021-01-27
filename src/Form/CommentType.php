@@ -21,6 +21,7 @@ class CommentType extends AbstractType
             ])
             ->add('condition', CheckboxType::class, [
                 'mapped' => false,
+                'label' => "Accepter les conditions"
             ])
         ;
     }

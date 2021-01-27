@@ -1,20 +1,20 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Blog</a>
+        <a class="navbar-brand" href="#">Mon Blog</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" href="{{ path('liste_articles') }}">Accueil</a>
+                <a class="nav-link {% if app.request.get('_route') == 'liste_articles' %} active{% endif %}" href="{{ path('liste_articles') }}">Accueil</a>
                 {% if is_granted('ROLE_ADMIN') %}
-                <a class="nav-link" href="{{ path('ajout_article') }}">Ajout article</a>
-                <a class="nav-link" href="{{ path('brouillon_article') }}">Les brouillons</a>
+                <a class="nav-link {% if app.request.get('_route') == 'ajout_article' %} active{% endif %}" href="{{ path('ajout_article') }}">Ajout article</a>
+                <a class="nav-link {% if app.request.get('_route') == 'brouillon_article' %} active{% endif %}" href="{{ path('brouillon_article') }}">Les brouillons</a>
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                 {% else %}
-                    <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    <a class="nav-link {% if app.request.get('_route') == 'app_login' %} active{% endif %}" href="{{ path('app_login') }}">Connexion</a>
                 {% endif %}
             </div>
         </div>
