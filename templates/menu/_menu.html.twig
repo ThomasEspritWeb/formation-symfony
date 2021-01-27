@@ -7,7 +7,15 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-link" href="{{ path('liste_articles') }}">Accueil</a>
+                {% if is_granted('ROLE_ADMIN') %}
                 <a class="nav-link" href="{{ path('ajout_article') }}">Ajout article</a>
+                <a class="nav-link" href="{{ path('brouillon_article') }}">Les brouillons</a>
+                {% endif %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                {% else %}
+                    <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                {% endif %}
             </div>
         </div>
     </div>
