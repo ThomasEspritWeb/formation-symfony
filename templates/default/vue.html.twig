@@ -15,7 +15,6 @@
 
     <small class="text-muted">Publié le {{ article.dateCreation|date('d/m/Y') }}</small>
     <p class="mt-3">{{ article.contenu }}</p>
-    
     <h3>Commentaires</h3>
 
     {% if article.comments|length == 0 %}
